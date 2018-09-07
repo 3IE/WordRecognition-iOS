@@ -9,7 +9,7 @@
 import UIKit
 import ARKit
 
-class RecordVowelVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
+class RecordVowelVC: UIViewController, ARSCNViewDelegate {
 	
 	@IBOutlet weak var sceneView: ARSCNView!
 	@IBOutlet weak var recognitionView: UIView!
@@ -22,8 +22,6 @@ class RecordVowelVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 	}
 	
 	let vowel = ["a","e","i","o","u", "neutral"]
-	let regionsToRecord = ["mouth", "jawOpen"]
-	let regionsToDiscard = ["mouthRight", "mouthLeft"]
 	var selectedVowel: String = ""
 	var learningMode: LearningMode = .record
 	var vowelMode: VowelLearningSubMode = .vowelRecognition
@@ -40,7 +38,6 @@ class RecordVowelVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		session.delegate = self
 		if let vowel = vowel.first {
 			selectedVowel = vowel
 		}
@@ -147,7 +144,6 @@ class RecordVowelVC: UIViewController, ARSCNViewDelegate, ARSessionDelegate {
 	
 	// MARK: - ARFaceTrackingSetup
 	func setupTracking() {
-		
 		guard ARFaceTrackingConfiguration.isSupported else { return }
 		let configuration = ARFaceTrackingConfiguration()
 		configuration.isLightEstimationEnabled = false

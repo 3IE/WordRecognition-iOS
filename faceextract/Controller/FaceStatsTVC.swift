@@ -56,7 +56,9 @@ class FaceStatsTVC: UIViewController, UITableViewDelegate, ARSCNViewDelegate, UI
 	func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
 		guard let faceAnchor = anchor as? ARFaceAnchor else { return }
 		let regionsToDisplay = ["mouth", "jaw", "cheek"]
+		//since apple used an enum, we can use the raw value to get the name of the blend shape and filter it based on what we want to keep
 		blendShapes = faceAnchor.blendShapes.filter { regionsToDisplay.contains(where: $0.key.rawValue.contains)  }
+		//we initialize our dictionaries of min and max values if it's the first time we get an expression
 		if (sortedShapeLocations.count == 0) {
 			sortedShapeLocations = blendShapes.keys.sorted{ $0.rawValue > $1.rawValue }
 			blendShapesMinValue = blendShapes

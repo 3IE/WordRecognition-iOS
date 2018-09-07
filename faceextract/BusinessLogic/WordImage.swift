@@ -48,7 +48,7 @@ class WordImage {
 		if let bestProba = averagedProba.first, let secondProba = averagedProba.last {
 			let shouldRecordNow = (bestProba.key != "neutral")
 			let certainty = bestProba.value / secondProba.value
-			// we only take into account the recording decision if we are above a certain threashold
+			// we only take into account the recording decision if we are above a certain threshold
 			if (shouldRecordNow != isCurrentlyRecording && (shouldRecordNow && certainty > WordImage.kNeedToRecordMeaningThreshold || shouldRecordNow == false && certainty > WordImage.kNeedToRecordNeutralThreshold)) {
 				return shouldRecordNow
 			}
@@ -110,9 +110,9 @@ class WordImage {
 			recordingValues.append(contentsOf: safeValues)
 		}
 		if (addPadding && trimmedRecording.count < WordImage.kMaxSamplesCountPerRecording) {
-			let missingCount = WordImage.kMaxSamplesCountPerRecording - trimmedRecording.count
-			let toto = [UInt8](repeating: 0, count: missingCount * featureCount)
-			recordingValues.append(contentsOf: toto)
+			let missingBytesCount = WordImage.kMaxSamplesCountPerRecording - trimmedRecording.count
+			let missingBytes = [UInt8](repeating: 0, count: missingBytesCount * featureCount)
+			recordingValues.append(contentsOf: missingBytes)
 		}
 		
 		let img = WordImage.grayImageFromBytes(recordingValues, imgWidth: featureCount)
@@ -126,7 +126,7 @@ class WordImage {
 		}
 		// we want to process the samples that led to the detection (and a few extra ones before)
 		let samplesCountToProcess = min(recordedExpressionsCount + neutralHistory.probabilitiesHistoryMaxLength, WordImage.kMaxSamplesCountPerRecording, expressionsBuffer.count)
-		// we alse remove part of the sample that led to stopping the recording
+		// we also remove part of the sample that led to stopping the recording
 		let recordingToProcess = expressionsBuffer.suffix(from: expressionsBuffer.count - samplesCountToProcess).prefix(samplesCountToProcess - neutralHistory.probabilitiesHistoryMaxLength / 3)
 		let simplifiedRecording = FaceProcessing.simplifyRecording(Array(recordingToProcess))
 		let enhancedRecording = WordImage.enhanceRecording(simplifiedRecording, factor: 2.0)
